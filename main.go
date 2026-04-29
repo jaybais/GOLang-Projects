@@ -5,14 +5,14 @@ import (
 )
 
 type Customer struct {     // Defining a struct named "Customer" to hold customer information
-    Name         string
+    Name         string    // Field to store the customer's name
     Address      string
     Services     string
     Monthly_Rate float32
 }
-func (c Customer) Print() {  // Method to print the details of a Customer instance
+func (self Customer) Print() {  // Method to print the details of a Customer instance
     fmt.Printf("Name: %s\nAddress: %s\nServices: %s\nMonthly Rate: $%.2f\n\n",   // Formatting the output to display customer details
-        c.Name, c.Address, c.Services, c.Monthly_Rate)   // Using fmt.Printf to format the output with the customer's name, address, services, and monthly rate
+        self.Name, self.Address, self.Services, self.Monthly_Rate)   // Using fmt.Printf to format the output with the customer's name, address, services, and monthly rate
 }
 func main() {    // The main function is the entry point of the program
     args := os.Args  // Accessing command-line arguments passed to the program
