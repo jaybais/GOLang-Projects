@@ -42,7 +42,7 @@ func main() {    // The main function is the entry point of the program
         },
     }
     for _, c := range customers {   // Iterating over the slice of customers and calling the Print method for each customer to display their details
-        c.Print()
+        c.Print()   // c is a loop variable like i in Python 
     }
 }
 
