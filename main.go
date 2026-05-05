@@ -3,6 +3,7 @@ import (
     "fmt"  // Importing the "fmt" package for formatted I/O operations
     "os"
     "strconv"   // Importing the "strconv" package to convert strings to numbers
+    "encoding/json" // Importing the "encoding/json" package to handle JSON encoding and decoding
 )
 
 type Customer struct {     // Defining a struct named "Customer" to hold customer information
@@ -92,5 +93,38 @@ fmt.Println()
     }
 }
 
-    
+// Make sure Task struct is JSON-ready
+// Task struct to represent a task with an ID, name, and completion status
+
+type Task struct {
+    ID   int    `json:"id"`
+    Name string `json:"name"`
+    Done bool   `json:"done"`
+}
+
+
+// This function WRITES your tasks to tasks.json
+
+func saveTasks(tasks []Task) error {
+    data, err := json.MarshalIndent(tasks, "", "  ")
+    if err != nil {
+        return err
+    }
+    return os.WriteFile("tasks.json", data, 0644)
+}
+
+func loadTasks() ([]Task, error) {
+    data, err := os.ReadFile("tasks.json")
+    if err != nil {
+        if os.IsNotExist(err) {
+            return []Task{}, nil
+        }
+        return nil, err
+    }
+
+    var tasks []Task
+    err = json.Unmarshal(data, &tasks)
+    return tasks, err
+}
+
 
