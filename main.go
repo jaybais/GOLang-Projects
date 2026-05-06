@@ -1,100 +1,104 @@
-package main  // Declaring the main package, which is the entry point of the Go program
+package main  
 import (
-    "fmt"  // Importing the "fmt" package for formatted I/O operations
+    "fmt"  
     "os"
-    "strconv"   // Importing the "strconv" package to convert strings to numbers
-    "encoding/json" // Importing the "encoding/json" package to handle JSON encoding and decoding
+    "strconv"   
+    "encoding/json" 
 )
 
-type Customer struct {     // Defining a struct named "Customer" to hold customer information
-    Name         string    // Field to store the customer's name
+
+type Customer struct {     
+    Name         string    
     Address      string
     Services     string
     Monthly_Rate float32
 }
-func (self Customer) Print() {  // Method to print the details of a Customer instance
-    fmt.Printf("Name: %s\nAddress: %s\nServices: %s\nMonthly Rate: $%.2f\n\n",   // Formatting the output to display customer details
-        self.Name, self.Address, self.Services, self.Monthly_Rate)   // Using fmt.Printf to format the output with the customer's name, address, services, and monthly rate
+
+
+func (self Customer) Print() {  
+    fmt.Printf("Name: %s\nAddress: %s\nServices: %s\nMonthly Rate: $%.2f\n\n",   
+        self.Name, self.Address, self.Services, self.Monthly_Rate)   
 }
-func main() {    // The main function is the entry point of the program
-    args := os.Args  // Accessing command-line arguments passed to the program
-    if len(args) < 2 {   // Checking if the number of arguments is less than 2 (the first argument is the program name)
-    fmt.Println("Usage: go run main.go [list | add]") // Printing usage instructions if no valid command is provided
+tasks, err := loadTasks()
+if err != nil {
+    fmt.Println("Error loading tasks:", err)
+    return
+}
+
+
+func main() {    
+    args := os.Args  
+    if len(args) < 2 {   
+    fmt.Println("Usage: go run main.go [list | add]") 
     return
 }
 
 fmt.Println()
 
-    customers := []Customer{   // Creating a slice of Customer structs to hold multiple customer records
-        {
-            Name: "Thomas O'Connor",
-            Address: "425 17th St. Google Dr. Pittsburgh, PA 16789",
-            Services: "Ultimate TV, Gig Extra Internet, Xfinity Mobile",
-            Monthly_Rate: 245.00,
-        },
-        {
-            Name: "Patrick DeAngelo",
-            Address: "25 13th St. Dairy Hill Lane, Small City, IN 20978",
-            Services: "Premium TV, Gigabit Internet, Xfinity Mobile",
-            Monthly_Rate: 265.00,
-        },
-        {
-            Name: "Kathleen Davis",
-            Address: "321 Country Road, West City, VA 32879",
-            Services: "1.2 Gig Internet, Xfinity Mobile",
-            Monthly_Rate: 205.00,
-        },
+    command := args[1]  
+
+    switch command {  
+
+    case "list":
+    if len(tasks) == 0 {
+        fmt.Println("No tasks found.")
+        return
     }
 
-
-    command := args[1]  // Storing the second command-line argument (the command) in a variable for later use
-
-    switch command {  // Using a switch statement to handle different commands based on the user input
-
-    case "list": // If the command is "list", iterate through the customers slice and print each customer's details
-        for _, c := range customers {  
-            c.Print() 
+    for _, t := range tasks {
+        status := "❌"
+        if t.Done {
+            status = "✅"
         }
+        fmt.Printf("[%d] %s %s\n", t.ID, t.Name, status)
+    }
 
-    case "add":  // If the command is "add", check if there are enough arguments to add a new customer
-        if len(args) < 6 {
-            fmt.Println(`Usage: add "Name" "Address" "Services" Rate`)
-            return
-        }
+    case "add":
+    if len(args) < 3 {
+        fmt.Println(`Usage: add "Task Name"`)
+        return
+    }
 
-        name := args[2]   // Storing the third command-line argument as the customer's name
-        address := args[3]
-        services := args[4]
-        rateStr := args[5]  // Storing the sixth command-line argument as a string to be converted to a float
+    newTask := Task{
+        ID:   len(tasks) + 1,
+        Name: args[2],
+        Done: false,
+    }
 
-        rateFloat, err := strconv.ParseFloat(rateStr, 32) // Converting the rate string to a float32 value, and checking for errors during conversion
-        if err != nil {
-            fmt.Println("Invalid rate.")
-            return
-        }
+    tasks = append(tasks, newTask)
 
-        newCustomer := Customer{  // Creating a new Customer struct with the provided details
+    err = saveTasks(tasks)
+    if err != nil {
+        fmt.Println("Error saving tasks:", err)
+        return
+    }
+
+    fmt.Println("Task added!")
+
+        newCustomer := Customer{  
             Name:         name,
             Address:      address,
             Services:     services,
             Monthly_Rate: float32(rateFloat),
         }
 
-        customers = append(customers, newCustomer) // Adding the new customer to the customers slice
+        customers = append(customers, newCustomer) 
 
-        fmt.Println("Customer added!\n") // Printing a confirmation message that the customer has been added
+        fmt.Println("Customer added!\n") 
 
-        for _, c := range customers {  // Iterating through the customers slice again to print all customers, including the newly added one
+        for _, c := range customers {  
             c.Print()
         }
 
-    default:  // If the command does not match "list" or "add", print an error message indicating an unknown command
+    default:  
         fmt.Println("Unknown command")
     }
 }
 
-// Make sure Task struct is JSON-ready
-// Task struct to represent a task with an ID, name, and completion status
+
+
+
+
 
 type Task struct {
     ID   int    `json:"id"`
@@ -103,7 +107,8 @@ type Task struct {
 }
 
 
-// This function WRITES your tasks to tasks.json
+
+
 
 func saveTasks(tasks []Task) error {
     data, err := json.MarshalIndent(tasks, "", "  ")
@@ -112,6 +117,7 @@ func saveTasks(tasks []Task) error {
     }
     return os.WriteFile("tasks.json", data, 0644)
 }
+
 
 func loadTasks() ([]Task, error) {
     data, err := os.ReadFile("tasks.json")
