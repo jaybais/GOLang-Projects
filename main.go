@@ -1,9 +1,9 @@
 package main  
 import (
     "fmt"  
-    "os"
-    "strconv"   
+    "os" 
     "encoding/json" 
+    "strconv"
 )
 
 
@@ -13,9 +13,7 @@ type Customer struct {
     Services     string
     Monthly_Rate float32
 }
-
-
-func (self Customer) Print() {  
+func (self Customer) Print() { 
     fmt.Printf("Name: %s\nAddress: %s\nServices: %s\nMonthly Rate: $%.2f\n\n",   
         self.Name, self.Address, self.Services, self.Monthly_Rate)   
 }
@@ -30,9 +28,9 @@ func main() {
     }
 
     // ✅ 1. LOAD DATA
-    tasks, err := loadTasks()
+    customers, err := loadCustomers()
     if err != nil {
-        fmt.Println("Error loading tasks:", err)
+        fmt.Println("Error loading customers:", err)
         return
     }
 
@@ -42,68 +40,84 @@ func main() {
 
     // ✅ 2. READ
     case "list":
-        for _, t := range tasks {
+        for _, t := range customers {
             fmt.Println(t.Name)
         }
 
     // ✅ 3. MODIFY
     case "add":
-        newTask := Task{
-            ID: len(tasks) + 1,
-            Name: args[2],
-            Done: false,
-        }
 
-        tasks = append(tasks, newTask)
-
-        // ✅ 4. SAVE
-        err = saveTasks(tasks)
-        if err != nil {
-            fmt.Println("Error saving:", err)
+        if len(args) < 6 {
+            fmt.Println("Usage:")
+            fmt.Println(`go run main.go add "Name" "Address" "Service" MonthlyRate`)
             return
         }
 
-    default:
-        fmt.Println("Unknown command")
+        rate64, err := strconv.ParseFloat(args[5], 32)
+        if err != nil {
+            fmt.Println("Invalid monthly rate")
+            return
+        }
+
+        newCustomer := Customer{
+            Name: args[2],
+            Address: args[3],
+            Services: args[4],
+            Monthly_Rate: float32(rate64),
+        }
+
+        customers = append(customers, newCustomer)
+
+        // ✅ 4. SAVE
+        err = saveCustomers(customers)
+    if err != nil {
+        fmt.Println("Error saving customers:", err)
+        return
     }
+
+    fmt.Println("Customer added successfully!")
+
+
+type Customer struct {
+    Name         string  `json:"Name"`
+    Address      string  `json:"Address"`
+    Services     string  `json:"Services"`
+    Monthly_Rate float32 `json:"Monthly_Rate"`
 }
 
 
-
-
-
-
-type Task struct {
-    ID   int    `json:"id"`
-    Name string `json:"name"`
-    Done bool   `json:"done"`
-}
-
-
-
-
-
-func saveTasks(tasks []Task) error {
-    data, err := json.MarshalIndent(tasks, "", "  ")
+func saveCustomers(customers []Customer) error {
+    data, err := json.MarshalIndent(customers, "", "  ")
     if err != nil {
         return err
     }
-    return os.WriteFile("tasks.json", data, 0644)
+    err = os.WriteFile("customers.json", data, 0644)
+    if err != nil {
+        return err
+    }
+    return nil  
 }
 
 
-func loadTasks() ([]Task, error) {
-    data, err := os.ReadFile("tasks.json")
+func loadCustomers() ([]Customer, error) {
+
+    data, err := os.ReadFile("customers.json")
     if err != nil {
+
         if os.IsNotExist(err) {
-            return []Task{}, nil
+            return []Customer{}, nil
         }
+
         return nil, err
     }
 
-    var tasks []Task
-    err = json.Unmarshal(data, &tasks)
-    return tasks, err
-}
+    var customers []Customer
 
+    err = json.Unmarshal(data, &customers)
+    if err != nil {
+        return nil, err
+    }
+
+    return customers, nil
+}
 
