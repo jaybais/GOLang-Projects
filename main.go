@@ -40,8 +40,8 @@ func main() {
 
     // ✅ 2. READ
     case "list":
-        for _, t := range customers {
-            fmt.Println(t.Name)
+        for _, c := range customers {
+            c.Print()
         }
 
     // ✅ 3. MODIFY
@@ -76,13 +76,7 @@ func main() {
     }
 
     fmt.Println("Customer added successfully!")
-
-
-type Customer struct {
-    Name         string  `json:"Name"`
-    Address      string  `json:"Address"`
-    Services     string  `json:"Services"`
-    Monthly_Rate float32 `json:"Monthly_Rate"`
+    }
 }
 
 
