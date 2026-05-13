@@ -4,5 +4,17 @@
     "Address": "425 17th St. Google Dr. Pittsburgh, PA 16789",
     "Services": "Ultimate TV, Gig Extra Internet, Xfinity Mobile",
     "Monthly_Rate": 245
+  },
+  {
+    "Name": "Patrick DeAngelo",
+    "Address": "25 13th St. Dairy Hill Lane, Small City, IN 20978",
+    "Services": "Premium TV, Gigabit Internet, Xfinity Mobile",
+    "Monthly_Rate": 265
+  },
+  {
+    "Name": "Kathleen Davis",
+    "Address": "321 Country Road, Home City, WV 32879",
+    "Services": "1.2 Gig Internet, Xfinity Mobile",
+    "Monthly_Rate": 205
   }
 ]
