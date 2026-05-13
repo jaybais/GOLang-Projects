@@ -44,7 +44,7 @@ func main() {
             c.Print()
         }
 
-    // ✅ 3. MODIFY
+    // ✅ 3. ADD NEW CUSTOMER
     case "add":    
 
         if len(args) < 6 {    
