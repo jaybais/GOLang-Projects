@@ -1,5 +1,36 @@
-GoLang Projects ReadMe
+# GoLang Projects
 
-Welcome to my GoLang Projects repository. At this time, I only have one ongoing project, which is a CLI Customer Manager. I have recently tested adding new customers and it works. I will add other features like delete and maybe modifying existing customer data. This may not be anytime soon though, as I will focus on my Python Projects creating a Weather App.
+Welcome to my GoLang Projects repository. This repository showcases my progress
+as I learn Go, starting with a CLI-based application.
 
-As I progress through my GoLang learning, I will add more projects to showcase what I have learned.
+## Projects
+
+- **CLI Customer Manager** - A command-line application for managing customer data
+
+## CLI Customer Manager
+
+A work-in-progress CLI application with the following features:
+
+### Completed
+
+- Add new customers
+
+### Planned
+
+- Delete customers
+- Modify existing customer data
+
+## Roadmap
+
+As I progress through my GoLang learning, I will continue adding projects to
+showcase new concepts and skills.
+
+## Notes
+
+- Active development on this repository may be slower in the near term as I
+  focus on my Python Weather App project
+- Commit history is available for this repository
+
+## Tools & Languages
+
+- Go (GoLang)
