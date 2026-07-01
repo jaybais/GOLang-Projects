@@ -28,7 +28,7 @@ showcase new concepts and skills.
 ## Notes
 
 - Active development on this repository may be slower in the near term as I
-  focus on my Python Weather App project
+  focus on my Python Weather App project and Java Library Management System
 - Commit history is available for this repository
 
 ## Tools & Languages
